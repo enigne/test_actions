@@ -11,7 +11,7 @@ jobs:
     steps:
       - id: dataStep
         run: |
-          TARGETS='["101:399", "401:899"]
+          TARGETS='["101:399", "401:899"]'
           echo "myoutput=$(jq -cn --argjson environments "$TARGETS" '{target: $environments}')" >> $GITHUB_OUTPUT          
   run-matrix:
     needs: setup
