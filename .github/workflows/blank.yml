@@ -11,8 +11,8 @@ jobs:
       - name: build matrix
         id: json
         run: |
-          test_matrix='{ "test_matrix": ["101","repo2","repo3","401:899"] }'
-          echo "test_matrix=$test_matrix" >> "$GITHUB_OUTPUT"
+          matrix='{ "test_matrix": ["101","repo2","repo3","401:899"] }'
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   run-matrix:
     needs: prepare
