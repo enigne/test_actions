@@ -1,24 +1,22 @@
 name: workflow-dispatch-dynamic-matrix
 on:
-  workflow_dispatch:
+  push:
+      branches: [ "main" ]
 
 jobs:
-  prepare:
+  setup:
     runs-on: ubuntu-latest
     outputs:
-      test_matrix: ${{ steps.json.outputs.test_matrix }}
+      mymatrix: ${{ steps.dataStep.outputs.myoutput }}
     steps:
-      - name: build matrix
-        id: json
+      - id: dataStep
         run: |
-          matrix='{ "test_matrix": ["101","repo2","repo3","401:899"] }'
-          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
-
+          TARGETS='["101:399", "401:899"]
+          echo "myoutput=$(jq -cn --argjson environments "$TARGETS" '{target: $environments}')" >> $GITHUB_OUTPUT          
   run-matrix:
-    needs: prepare
+    needs: setup
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.prepare.outputs.test_matrix) }}
+      matrix: ${{ fromJson(needs.setup.outputs.mymatrix) }}
     steps:
-      - run: echo "${{ matrix.test_matrix }}"
+      - run: echo ${{matrix.target}}
